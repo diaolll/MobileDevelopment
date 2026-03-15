@@ -1,7 +1,13 @@
+// ============================================================
+// FILE: lib/features/mahasiswa_aktif/presentation/widgets/mahasiswa_aktif_widget.dart
+// Materi 5 - Menampilkan data dari API /posts
+// ============================================================
+
 import 'package:flutter/material.dart';
 import 'package:d4tivokasi/core/constants/constants.dart';
 import 'package:d4tivokasi/features/mahasiswa_aktif/data/models/mahasiswa_aktif_model.dart';
 
+/// MahasiswaAktifCard
 class MahasiswaAktifCard extends StatefulWidget {
   final MahasiswaAktifModel mahasiswa;
   final VoidCallback? onTap;
@@ -41,12 +47,6 @@ class _MahasiswaAktifCardState extends State<MahasiswaAktifCard>
     super.dispose();
   }
 
-  Color _getIpkColor(double ipk) {
-    if (ipk >= 3.5) return const Color(0xFF43e97b);
-    if (ipk >= 3.0) return const Color(0xFF4facfe);
-    return const Color(0xFFf093fb);
-  }
-
   @override
   Widget build(BuildContext context) {
     final gradientColors =
@@ -68,16 +68,12 @@ class _MahasiswaAktifCardState extends State<MahasiswaAktifCard>
         child: Container(
           margin: const EdgeInsets.only(bottom: 16),
           decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Colors.white, gradientColors[0].withOpacity(0.05)],
-            ),
+            color: Colors.white,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: gradientColors[0].withOpacity(0.1),
-                blurRadius: 10,
+                color: gradientColors[0].withOpacity(0.12),
+                blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
             ],
@@ -89,111 +85,90 @@ class _MahasiswaAktifCardState extends State<MahasiswaAktifCard>
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Avatar
+                // Avatar gradient
                 Container(
-                  width: 60,
-                  height: 60,
+                  width: 52,
+                  height: 52,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: gradientColors,
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: gradientColors[0].withOpacity(0.3),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
+                    borderRadius: BorderRadius.circular(14),
                   ),
                   child: Center(
                     child: Text(
-                      widget.mahasiswa.nama.substring(0, 1).toUpperCase(),
+                      '${widget.mahasiswa.userId}',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
                         fontWeight: FontWeight.bold,
+                        fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(width: 16),
-                // Mahasiswa Information
+                const SizedBox(width: 14),
+                // Info
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Badge ID + Title
                       Row(
                         children: [
-                          Expanded(
-                            child: Text(
-                              widget.mahasiswa.nama,
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: -0.3,
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-                          // IPK Badge
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 8,
-                              vertical: 3,
+                              vertical: 2,
                             ),
                             decoration: BoxDecoration(
-                              color: _getIpkColor(
-                                widget.mahasiswa.ipk,
-                              ).withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(8),
+                              color: gradientColors[0].withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(6),
                             ),
                             child: Text(
-                              'IPK ${widget.mahasiswa.ipk.toStringAsFixed(2)}',
+                              'Post #${widget.mahasiswa.id}',
                               style: TextStyle(
                                 fontSize: 11,
                                 fontWeight: FontWeight.w600,
-                                color: _getIpkColor(widget.mahasiswa.ipk),
+                                color: gradientColors[0],
                               ),
                             ),
                           ),
                         ],
                       ),
                       const SizedBox(height: 6),
-                      _buildInfoRow(
-                        Icons.badge_outlined,
-                        'NIM: ${widget.mahasiswa.nim}',
+                      Text(
+                        widget.mahasiswa.title,
+                        style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: -0.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 3),
-                      _buildInfoRow(
-                        Icons.email_outlined,
-                        widget.mahasiswa.email,
-                      ),
-                      const SizedBox(height: 3),
-                      _buildInfoRow(
-                        Icons.school_outlined,
-                        '${widget.mahasiswa.jurusan} - Semester ${widget.mahasiswa.semester}',
+                      const SizedBox(height: 4),
+                      Text(
+                        widget.mahasiswa.body,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[500],
+                          height: 1.4,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(width: 8),
-                // Arrow
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: gradientColors[0].withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16,
-                    color: gradientColors[0],
-                  ),
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: Colors.grey[400],
                 ),
               ],
             ),
@@ -202,26 +177,9 @@ class _MahasiswaAktifCardState extends State<MahasiswaAktifCard>
       ),
     );
   }
-
-  Widget _buildInfoRow(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, size: 13, color: Colors.grey[600]),
-        const SizedBox(width: 6),
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-      ],
-    );
-  }
 }
 
-/// MahasiswaAktifListView Widget
+/// MahasiswaAktifListView
 class MahasiswaAktifListView extends StatelessWidget {
   final List<MahasiswaAktifModel> mahasiswaAktifList;
   final VoidCallback? onRefresh;
@@ -241,9 +199,7 @@ class MahasiswaAktifListView extends StatelessWidget {
     final gradients = AppConstants.dashboardGradients;
 
     return RefreshIndicator(
-      onRefresh: () async {
-        onRefresh?.call();
-      },
+      onRefresh: () async => onRefresh?.call(),
       child: ListView.builder(
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         itemCount: mahasiswaAktifList.length,
@@ -253,7 +209,7 @@ class MahasiswaAktifListView extends StatelessWidget {
             mahasiswa: mahasiswa,
             gradientColors: gradients[index % gradients.length],
             onTap: () {
-              _showMahasiswaAktifDetail(
+              _showDetail(
                 context,
                 mahasiswa,
                 gradients[index % gradients.length],
@@ -265,10 +221,10 @@ class MahasiswaAktifListView extends StatelessWidget {
     );
   }
 
-  void _showMahasiswaAktifDetail(
+  void _showDetail(
     BuildContext context,
-    MahasiswaAktifModel mahasiswa,
-    List<Color> gradientColors,
+    MahasiswaAktifModel m,
+    List<Color> colors,
   ) {
     showModalBottomSheet(
       context: context,
@@ -277,117 +233,64 @@ class MahasiswaAktifListView extends StatelessWidget {
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
       builder:
-          (context) => _MahasiswaAktifDetailSheet(
-            mahasiswa: mahasiswa,
-            gradientColors: gradientColors,
-          ),
-    );
-  }
-}
-
-class _MahasiswaAktifDetailSheet extends StatelessWidget {
-  final MahasiswaAktifModel mahasiswa;
-  final List<Color> gradientColors;
-
-  const _MahasiswaAktifDetailSheet({
-    required this.mahasiswa,
-    required this.gradientColors,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: gradientColors),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Center(
-              child: Text(
-                mahasiswa.nama.substring(0, 1).toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
+          (_) => Padding(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
                 ),
-              ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
+                      decoration: BoxDecoration(
+                        color: colors[0].withOpacity(0.15),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        'User #${m.userId} · Post #${m.id}',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: colors[0],
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  m.title,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Divider(),
+                const SizedBox(height: 8),
+                Text(
+                  m.body,
+                  style: const TextStyle(fontSize: 14, height: 1.6),
+                ),
+                const SizedBox(height: 24),
+              ],
             ),
           ),
-          const SizedBox(height: 16),
-          Text(
-            mahasiswa.nama,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
-          _buildDetailRow(Icons.badge_outlined, 'NIM', mahasiswa.nim),
-          const Divider(),
-          _buildDetailRow(Icons.email_outlined, 'Email', mahasiswa.email),
-          const Divider(),
-          _buildDetailRow(Icons.school_outlined, 'Jurusan', mahasiswa.jurusan),
-          const Divider(),
-          _buildDetailRow(
-            Icons.calendar_today_outlined,
-            'Angkatan',
-            mahasiswa.angkatan,
-          ),
-          const Divider(),
-          _buildDetailRow(
-            Icons.book_outlined,
-            'Semester',
-            mahasiswa.semester,
-          ),
-          const Divider(),
-          _buildDetailRow(
-            Icons.star_outline_rounded,
-            'IPK',
-            mahasiswa.ipk.toStringAsFixed(2),
-          ),
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: gradientColors[0], size: 20),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

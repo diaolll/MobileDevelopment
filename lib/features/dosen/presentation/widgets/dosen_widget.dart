@@ -1,7 +1,13 @@
+// ============================================================
+// FILE: lib/features/dosen/presentation/widgets/dosen_widget.dart
+// Materi 5 - Menampilkan data dari API JSONPlaceholder /users
+// ============================================================
+
 import 'package:flutter/material.dart';
 import 'package:d4tivokasi/core/constants/constants.dart';
 import 'package:d4tivokasi/features/dosen/data/models/dosen_model.dart';
 
+/// ModernDosenCard - Card modern dengan gradient untuk menampilkan data dosen dari API
 class ModernDosenCard extends StatefulWidget {
   final DosenModel dosen;
   final VoidCallback? onTap;
@@ -106,7 +112,7 @@ class _ModernDosenCardState extends State<ModernDosenCard>
                   ), // BoxDecoration
                   child: Center(
                     child: Text(
-                      widget.dosen.nama.substring(0, 1).toUpperCase(),
+                      widget.dosen.name.substring(0, 1).toUpperCase(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 24,
@@ -123,7 +129,7 @@ class _ModernDosenCardState extends State<ModernDosenCard>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.dosen.nama,
+                        widget.dosen.name,
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -134,8 +140,8 @@ class _ModernDosenCardState extends State<ModernDosenCard>
                       ), // Text
                       const SizedBox(height: 8),
                       _buildInfoRow(
-                        Icons.badge_outlined,
-                        'NIP: ${widget.dosen.nip}',
+                        Icons.account_circle_outlined,
+                        '@${widget.dosen.username}',
                       ),
                       const SizedBox(height: 4),
                       _buildInfoRow(
@@ -144,8 +150,8 @@ class _ModernDosenCardState extends State<ModernDosenCard>
                       ),
                       const SizedBox(height: 4),
                       _buildInfoRow(
-                        Icons.school_outlined,
-                        widget.dosen.jurusan,
+                        Icons.location_on_outlined,
+                        '${widget.dosen.address.street}, ${widget.dosen.address.city}',
                       ),
                     ],
                   ), // Column
@@ -190,152 +196,207 @@ class _ModernDosenCardState extends State<ModernDosenCard>
   }
 }
 
-/// DosenListView Widget
+/// DosenCard - Simple card (alternatif dari ModernDosenCard)
+class DosenCard extends StatelessWidget {
+  final DosenModel dosen;
+  final VoidCallback? onTap;
+
+  const DosenCard({Key? key, required this.dosen, this.onTap})
+    : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: AppConstants.paddingMedium),
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundColor: Theme.of(context).primaryColor,
+                child: Text(
+                  dosen.name.substring(0, 1).toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ), // TextStyle
+                ), // Text
+              ), // CircleAvatar
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      dosen.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ), // TextStyle
+                    ), // Text
+                    const SizedBox(height: 4),
+                    Text(
+                      '@${dosen.username}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ), // Text
+                    Text(
+                      dosen.email,
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                    ), // Text
+                    Text(
+                      '${dosen.address.street}, ${dosen.address.city}',
+                      style: TextStyle(
+                        fontSize: 13,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ), // Text
+                  ],
+                ), // Column
+              ), // Expanded
+              Icon(
+                Icons.arrow_forward_ios,
+                size: 16,
+                color: Colors.grey[400],
+              ),
+            ],
+          ), // Row
+        ), // Padding
+      ), // InkWell
+    ); // Card
+  }
+}
+
+/// DosenEmptyState - Widget ketika data kosong
+class DosenEmptyState extends StatelessWidget {
+  final VoidCallback? onRefresh;
+
+  const DosenEmptyState({Key? key, this.onRefresh}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              shape: BoxShape.circle,
+            ), // BoxDecoration
+            child: Icon(
+              Icons.people_outline_rounded,
+              size: 64,
+              color: Colors.grey[400],
+            ), // Icon
+          ), // Container
+          const SizedBox(height: 24),
+          Text(
+            'Tidak ada data dosen',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey[700],
+            ), // TextStyle
+          ), // Text
+          const SizedBox(height: 8),
+          Text(
+            'Belum ada dosen yang terdaftar',
+            style: TextStyle(fontSize: 14, color: Colors.grey[500]),
+          ), // Text
+          if (onRefresh != null) ...[
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: onRefresh,
+              icon: const Icon(Icons.refresh),
+              label: const Text('Refresh'),
+              style: ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ), // EdgeInsets.symmetric
+              ), // ElevatedButton.styleFrom
+            ), // ElevatedButton.icon
+          ],
+        ],
+      ), // Column
+    ); // Center
+  }
+}
+
+/// DosenListView - Widget ListView untuk menampilkan daftar dosen
 class DosenListView extends StatelessWidget {
   final List<DosenModel> dosenList;
-  final VoidCallback? onRefresh;
+  final VoidCallback onRefresh;
   final bool useModernCard;
 
   const DosenListView({
-    super.key,
+    Key? key,
     required this.dosenList,
-    this.onRefresh,
+    required this.onRefresh,
     this.useModernCard = true,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     if (dosenList.isEmpty) {
-      return const Center(child: Text('Tidak ada data dosen'));
+      return DosenEmptyState(onRefresh: onRefresh);
     }
 
-    final gradients = AppConstants.dashboardGradients;
-
     return RefreshIndicator(
-      onRefresh: () async {
-        onRefresh?.call();
-      },
+      onRefresh: () async => onRefresh(),
       child: ListView.builder(
         padding: const EdgeInsets.all(AppConstants.paddingMedium),
         itemCount: dosenList.length,
         itemBuilder: (context, index) {
           final dosen = dosenList[index];
-          return ModernDosenCard(
-            dosen: dosen,
-            gradientColors: gradients[index % gradients.length],
-            onTap: () {
-              _showDosenDetail(context, dosen, gradients[index % gradients.length]);
-            },
-          );
+          final gradientColors =
+              AppConstants
+                  .dashboardGradients[index % AppConstants.dashboardGradients.length];
+
+          if (useModernCard) {
+            return ModernDosenCard(
+              dosen: dosen,
+              gradientColors: gradientColors,
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Detail: ${dosen.name}'),
+                    behavior: SnackBarBehavior.floating,
+                    duration: const Duration(seconds: 2),
+                  ), // SnackBar
+                );
+              },
+            ); // ModernDosenCard
+          } else {
+            return DosenCard(
+              dosen: dosen,
+              onTap: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Detail: ${dosen.name}')),
+                );
+              },
+            ); // DosenCard
+          }
         },
-      ),
-    );
-  }
-
-  void _showDosenDetail(
-    BuildContext context,
-    DosenModel dosen,
-    List<Color> gradientColors,
-  ) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
-      builder: (context) => _DosenDetailSheet(
-        dosen: dosen,
-        gradientColors: gradientColors,
-      ),
-    );
-  }
-}
-
-class _DosenDetailSheet extends StatelessWidget {
-  final DosenModel dosen;
-  final List<Color> gradientColors;
-
-  const _DosenDetailSheet({
-    required this.dosen,
-    required this.gradientColors,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: 40,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Colors.grey[300],
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(colors: gradientColors),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Center(
-              child: Text(
-                dosen.nama.substring(0, 1).toUpperCase(),
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 32,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            dosen.nama,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 24),
-          _buildDetailRow(Icons.badge_outlined, 'NIP', dosen.nip),
-          const Divider(),
-          _buildDetailRow(Icons.email_outlined, 'Email', dosen.email),
-          const Divider(),
-          _buildDetailRow(Icons.school_outlined, 'Jurusan', dosen.jurusan),
-          const SizedBox(height: 24),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: gradientColors[0], size: 20),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                label,
-                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-              ),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
+      ), // ListView.builder
+    ); // RefreshIndicator
   }
 }
