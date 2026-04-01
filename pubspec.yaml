@@ -1,5 +1,5 @@
 name: d4tivokasi
-description: Dashboard Mahasiswa D4TI - Praktikum Mobile Materi 5
+description: Dashboard Mahasiswa D4TI - Praktikum Mobile Materi 6
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -11,7 +11,8 @@ dependencies:
     sdk: flutter
   flutter_riverpod: ^2.6.1
   http: ^1.2.2
-  dio: ^5.4.0 
+  dio: ^5.8.0+1
+  shared_preferences: ^2.5.3
   cupertino_icons: ^1.0.6
 
 dev_dependencies:

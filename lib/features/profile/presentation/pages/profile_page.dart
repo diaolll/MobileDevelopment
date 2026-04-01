@@ -39,7 +39,7 @@ class ProfilePage extends ConsumerWidget {
           pinned: true,
           flexibleSpace: FlexibleSpaceBar(
             background: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,

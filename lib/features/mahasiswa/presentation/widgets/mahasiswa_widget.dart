@@ -211,7 +211,7 @@ class MahasiswaListView extends StatelessWidget {
       return const Center(child: Text('Tidak ada data mahasiswa'));
     }
 
-    final gradients = AppConstants.dashboardGradients;
+    const gradients = AppConstants.dashboardGradients;
 
     return RefreshIndicator(
       onRefresh: () async => onRefresh?.call(),

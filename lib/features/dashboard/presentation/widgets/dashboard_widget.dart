@@ -11,11 +11,11 @@ class StatCard extends StatelessWidget {
   final VoidCallback? onTap;
 
   const StatCard({
-    Key? key,
+    super.key,
     required this.stats,
     this.isSelected = false,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class StatCard extends StatelessWidget {
             children: [
               Text(
                 stats.title,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: AppTheme.textSecondaryColor,
                   fontWeight: FontWeight.w500,
@@ -92,7 +92,7 @@ class StatCard extends StatelessWidget {
 class DashboardHeader extends ConsumerWidget {
   final String userName;
 
-  const DashboardHeader({Key? key, required this.userName}) : super(key: key);
+  const DashboardHeader({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -168,13 +168,13 @@ class ModernStatCard extends StatefulWidget {
   final VoidCallback? onTap;
 
   const ModernStatCard({
-    Key? key,
+    super.key,
     required this.stats,
     required this.icon,
     required this.gradientColors,
     this.isSelected = false,
     this.onTap,
-  }) : super(key: key);
+  });
 
   @override
   State<ModernStatCard> createState() => _ModernStatCardState();

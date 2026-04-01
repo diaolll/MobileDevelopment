@@ -10,7 +10,7 @@ import 'package:d4tivokasi/features/dosen/presentation/pages/dosen_page.dart';
 import 'package:d4tivokasi/features/profile/presentation/pages/profile_page.dart';
 
 class DashboardPage extends ConsumerWidget {
-  const DashboardPage({Key? key}) : super(key: key);
+  const DashboardPage({super.key});
 
   // get icon
   IconData _getIconForStat(String title) {
